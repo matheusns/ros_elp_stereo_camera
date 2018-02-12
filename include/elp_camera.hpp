@@ -2,6 +2,7 @@
 #define ELIR_STEREO_CAMERA_ELP_CAMERA_HPP
 
 #include <thread>
+#include <exception>
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/core/version.hpp"
@@ -12,6 +13,28 @@
 
 namespace elp 
 {
+
+class ElpCameraException: public std::exception 
+{
+  public:
+    explicit ElpCameraException(const char* msg)
+        :msg_(msg)
+    {
+      
+    }
+
+  virtual ~ElpCameraException()
+  {
+
+  }
+
+  protected:
+    virtual const char* what() 
+    {
+     return msg_.c_str();
+    }
+    std::string msg_;
+};
 
 class ElpCamera
 {
