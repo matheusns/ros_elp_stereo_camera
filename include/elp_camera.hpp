@@ -1,6 +1,8 @@
 #ifndef ELIR_STEREO_CAMERA_ELP_CAMERA_HPP
 #define ELIR_STEREO_CAMERA_ELP_CAMERA_HPP
 
+#include <thread>
+
 #include "opencv2/core/core.hpp"
 #include "opencv2/core/version.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -63,7 +65,23 @@ class ElpCamera
     void stopStreaming();
      
   protected:
-    int test_;
+    /**    
+     * brief Stops the camera streaming.
+     * 
+     * This method stops the camera streaming.
+     * 
+     * @return void. 
+     *
+     */  
+    void imageAcquisition();
+
+    int image_width_;
+    int image_height_;
+
+    bool is_streaming_; 
+
+    std::thread *img_aqt_th_;
+    GRABCALLBACK callback_;
 };
 } // elp namespace
 #endif //ELIR_STEREO_CAMERA_ELP_CAMERA_HPP
