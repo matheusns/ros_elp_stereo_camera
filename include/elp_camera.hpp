@@ -18,21 +18,13 @@ class ElpCameraException: public std::exception
 {
   public:
     explicit ElpCameraException(const char* msg)
-        :msg_(msg)
+        :msg_(msg) {}
+    virtual ~ElpCameraException(){}
+    virtual const char* what() const throw() 
     {
-      
+        return msg_.c_str();
     }
-
-  virtual ~ElpCameraException()
-  {
-
-  }
-
   protected:
-    virtual const char* what() 
-    {
-     return msg_.c_str();
-    }
     std::string msg_;
 };
 
@@ -56,7 +48,7 @@ class ElpCamera
      * @return nothing 
      *
      */  
-    typedef void (*GRABCALLBACK)(cv::Mat src);
+    typedef std::function<void(const cv::Mat&)> GrabCallback;
     virtual ~ElpCamera();
     /**    
      * brief Configures the camera callback method.
@@ -67,7 +59,7 @@ class ElpCamera
      * @return void. 
      *
      */  
-    void setupCallback(const GRABCALLBACK callback);
+    void setupCallback(const GrabCallback frame_callback);
     /**    
      * brief Starts the camera streaming.
      * 
@@ -104,7 +96,8 @@ class ElpCamera
     bool is_streaming_; 
 
     std::thread *img_aqt_th_;
-    GRABCALLBACK callback_;
+    GrabCallback callback_;
+    ros::NodeHandle nh_;
 };
 } // elp namespace
 #endif //ELIR_STEREO_CAMERA_ELP_CAMERA_HPP
